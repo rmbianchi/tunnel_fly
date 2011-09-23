@@ -1,6 +1,6 @@
 class Tunnel {
   Ring[] rings;
-  final int ring_depth = 12;
+  final int ring_depth = 18;
 
 
   Tunnel(int ring_ct){
@@ -16,7 +16,7 @@ class Tunnel {
       rings[i].z -= z;
       if (rings[i].z < -100){
         rings[i].z += rings.length * ring_depth;
-        rings[i].randomize_magnitudes();
+        rings[i].reinitialize();
       }
     }
   }

@@ -17,18 +17,18 @@ void setup(){
   //  stuff[i].z = 0;//(int)random(10);
   //}
   ring = new Ring();
-  tunnel = new Tunnel(15);
+  tunnel = new Tunnel(8);
 }
 
 void draw(){
-  background(255);
+  background(0);
   stroke(0xff000000);
   fill(0x993366aa);
 
   tick ++;
-  //rotateY(radians(tick % 360));
-  //rotateX(radians(tick % 360));
-  //rotateZ(radians(tick % 360));
+  rotateY(radians(tick % 360));
+  rotateX(radians(tick % 360));
+  rotateZ(radians(tick % 360));
   //axis();
 
   //ring.randomize_magnitudes(45,65);
