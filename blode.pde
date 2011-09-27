@@ -15,7 +15,7 @@ class Blode {
                           this.address,
                           this.port);
 
-    this.tcp.write("[\"info\"]\r\n");
+    //this.tcp.write("[\"info\"]\r\n");
   }
 
   boolean readMessage() {

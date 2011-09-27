@@ -4,7 +4,8 @@ Ring ring;
 Tunnel tunnel;
 Blode blode;
 
-int tick = 0;
+int count, max_count = 0;
+float tick = 0;
 boolean stopped = false;
 int[] rotating = new int[3];
 int[] rotation = new int[3];
@@ -18,17 +19,17 @@ int movement_increment = 2;
 void setup(){
   size(800,800,OPENGL);
   frustum( -200,200, -200,200, 400, 0);
-  frameRate(30);
+  //frameRate(30);
 
-  tunnel = new Tunnel(3008);
+  tunnel = new Tunnel(3000);
   blode = new Blode(this);
 }
 
 void draw(){
   camera(
-      100 + camera_position[0],
+      0 + camera_position[0],
       0 + camera_position[1],
-      0 + camera_position[2],
+      -250 + camera_position[2],
 
       0,0,0,
       0,-1,0
@@ -40,21 +41,29 @@ void draw(){
   fill(0x993366aa);
   update_transform();
 
-  tick ++;
-  rotateY(radians( rotation[0] ));
-  rotateX(radians( rotation[1] ));
-  rotateZ(radians( rotation[2] ));
+  tick += 0.1;
+  //manual rotation
+  //rotateY(radians( rotation[0] ));
+  //rotateX(radians( rotation[1] ));
+  //rotateZ(radians( rotation[2] ));
+  //automatic rotation
+  rotateY(radians( tick ));
+  rotateX(radians( tick ));
+  rotateZ(radians( tick ));
 
-  axis();
+  //axis();
 
-  if (! stopped)
-    tunnel.step( 5 );
+  //if (! stopped)
+    tunnel.step( 55 );
 
   tunnel.draw();
-  int count = blode.readMessages();
+  count = blode.readMessages();
+  if (count > max_count)
+    max_count = count;
 
-  if (! stopped)
-    tunnel.emit(count);
+  if (! stopped && max_count > 0)
+    if (!tunnel.emit((float)count / max_count))
+      println("Emit failed");
 }
 
 void hud(){

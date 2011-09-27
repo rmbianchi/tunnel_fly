@@ -1,5 +1,6 @@
 class Ring {
-  int x,y,z,size,life;
+  float x,y,z,size;
+  int life;
   color c;
 
   int pt_ct = 12;
@@ -12,8 +13,8 @@ class Ring {
   boolean disabled = false;
   boolean respawn = true;
 
-  private int min_magnitude = 9;
-  private int max_magnitude = 15;
+  private int min_magnitude = 2;
+  private int max_magnitude = 7;
 
   Ring(){
     reinitialize();
@@ -21,12 +22,16 @@ class Ring {
 
   public void reinitialize(){
     life = 0;
-    set_pt_ct( (int) random(3,86) );
+    //set_pt_ct( (int) random(3,86) );
+    set_pt_ct( (int)(size * 25) );
     randomize_magnitudes();
     choose_colors();
   }
 
   public void set_pt_ct(int count){
+    if (count <= 3)
+      count = 5;
+
     pt_ct = count;
     degree_increment = 360 / pt_ct;
     magnitudes = new int[pt_ct];
@@ -34,7 +39,9 @@ class Ring {
     point_y = new float[pt_ct];
   }
 
-  public void randomize_magnitudes(){ randomize_magnitudes(min_magnitude,max_magnitude); }
+  public void randomize_magnitudes(){
+    randomize_magnitudes( pt_ct, pt_ct + 3);
+  }
   public void randomize_magnitudes(int low, int high){
     for (int i = 0; i < pt_ct; i ++){
       magnitudes[i] = (int) random(low, high);
@@ -42,8 +49,14 @@ class Ring {
   }
 
   public void choose_colors(){
-    //c = color(100,100,100);
-    c = color( constrain(pt_ct * 4, 0, 255), constrain(pt_ct / 2, 0, 255), constrain( pt_ct / 2, 0, 255) );
+    int r = (int)random(1,3);
+    int base = (int)random(50,200);
+    if (r == 1)
+      c = color( pt_ct, 255 - base, base );
+    else if (r == 2)
+      c = color( base, pt_ct, 255 - base );
+    else if (r == 3)
+      c = color( 255 - base, base, pt_ct );
   }
 
   public void delta_points(){
@@ -64,6 +77,9 @@ class Ring {
     calc_points();
     pushMatrix();
 
+    //front-back line at center of ring
+    //stroke(color(255,0,255));
+    //line(0,0,-2, 0,0,2);
     stroke(c);
     //translate(this.x, this.y, this.z);
 
@@ -71,7 +87,7 @@ class Ring {
     for (int i = 0; i < pt_ct; i ++){
       i_prev = (i==0) ? pt_ct - 1 : i - 1;
 
-      line(point_x[i], point_y[i],  point_x[i_prev], point_y[i_prev]);
+      line(point_x[i], point_y[i], 0,  point_x[i_prev], point_y[i_prev], 0);
     }
     popMatrix();
   }
