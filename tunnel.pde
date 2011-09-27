@@ -8,6 +8,8 @@ class Tunnel {
   float space_between = 10;
   float last_render = 0;
 
+  final int algorithm = 2;
+
   Tunnel(int ring_ct){
     rings = new Ring[ring_ct];
     //for (int i=0; i < rings.length; i++){
@@ -35,7 +37,7 @@ class Tunnel {
     for (int i=0; i < rings.length; i++){
       if (rings[i] == null){
         rings[i] = new Ring();
-        rings[i].z = 0;//max(last_render - space_between, 400);
+        rings[i].z = -230;//max(last_render - space_between, 400);
         return rings[i];
       }
     }
@@ -49,13 +51,13 @@ class Tunnel {
         continue;
 
       rings[i].z += ze_step;
-      rings[i].life --;
       if (rings[i].z > 500)
         rings[i] = null;
     }
   }
 
   public void draw(){
+    function();
     for (int i=0; i < rings.length; i++) {
       if (rings[i] != null) {
         pushMatrix();
@@ -70,11 +72,22 @@ class Tunnel {
       println(frameRate);
   }
 
-  private float why(float zee){ return (float)( 100 * sin( zee / 50 ));  }
-  private float why_prime(float zee){ return (float)(2 * cos( zee / 50)); }
+  private float why(float zee){ 
+    switch (algorithm){
+      case 1: return (float)( 100 * sin( zee / 50 ));
+      case 2: return (float)( zee );
+    }
+    return 0.0;
+  }
+  private float why_prime(float zee){
+    switch (algorithm){
+      case 1: return (float)(2 * cos( zee / 50));
+      case 2: return 1.0;
+    }
+    return 0.0;
+  }
 
   private void math(float z){
-    z = z * ring_depth;
     // y = z ^ 2
     float y = why(z);
 

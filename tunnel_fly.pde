@@ -27,12 +27,13 @@ void setup(){
 
 void draw(){
   camera(
+      //camera position
       0 + camera_position[0],
       0 + camera_position[1],
-      -250 + camera_position[2],
+      0 + camera_position[2],
 
-      0,0,0,
-      0,-1,0
+      0, 0,-1,  //look vector
+      0, 1, 0   //up vector
   );
   hud();
 
@@ -43,15 +44,15 @@ void draw(){
 
   tick += 0.1;
   //manual rotation
-  //rotateY(radians( rotation[0] ));
-  //rotateX(radians( rotation[1] ));
-  //rotateZ(radians( rotation[2] ));
+  rotateY(radians( rotation[0] ));
+  rotateX(radians( rotation[1] ));
+  rotateZ(radians( rotation[2] ));
   //automatic rotation
-  rotateY(radians( tick ));
-  rotateX(radians( tick ));
-  rotateZ(radians( tick ));
+  //rotateY(radians( tick ));
+  //rotateX(radians( tick ));
+  //rotateZ(radians( tick ));
 
-  //axis();
+  axis();
 
   //if (! stopped)
     tunnel.step( 55 );
@@ -62,7 +63,7 @@ void draw(){
     max_count = count;
 
   if (! stopped && max_count > 0)
-    if (!tunnel.emit((float)count / max_count))
+    if (!tunnel.emit((float)count / 30))
       println("Emit failed");
 }
 
