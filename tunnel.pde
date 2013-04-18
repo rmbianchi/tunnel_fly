@@ -8,7 +8,7 @@ class Tunnel {
   float space_between = 10;
   float last_render = 0;
 
-  final int algorithm = 2;
+  final int algorithm = 1;
 
   Tunnel(int ring_ct){
     rings = new Ring[ring_ct];
@@ -57,7 +57,6 @@ class Tunnel {
   }
 
   public void draw(){
-    function();
     for (int i=0; i < rings.length; i++) {
       if (rings[i] != null) {
         pushMatrix();
@@ -76,6 +75,8 @@ class Tunnel {
     switch (algorithm){
       case 1: return (float)( 100 * sin( zee / 50 ));
       case 2: return (float)( zee );
+      case 3: return (float)( 100 * tan( zee / 50 ));
+      case 4: return (float)( Math.pow(zee, 2) );
     }
     return 0.0;
   }
@@ -83,6 +84,8 @@ class Tunnel {
     switch (algorithm){
       case 1: return (float)(2 * cos( zee / 50));
       case 2: return 1.0;
+      case 3: return (float)( 2.0 / Math.pow(cos(zee / 50),2) );
+      case 4: return 2.0 * zee;
     }
     return 0.0;
   }
@@ -110,7 +113,7 @@ class Tunnel {
 
     boolean initial = true;
     stroke(color(255,0,255));
-    for (z = 0; z < 200; z += ze_step){
+    for (z = -230; z < 500; z += ze_step){
       y = why( z );
       if (initial != true)
         line(0,y,z, 0,prev_y,prev_z);

@@ -30,7 +30,7 @@ class Ring {
 
   public void set_pt_ct(int count){
     if (count <= 3)
-      count = 5;
+      count = 8;
 
     pt_ct = count;
     degree_increment = 360 / pt_ct;

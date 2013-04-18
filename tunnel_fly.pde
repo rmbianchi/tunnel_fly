@@ -6,7 +6,14 @@ Blode blode;
 
 int count, max_count = 0;
 float tick = 0;
+
 boolean stopped = false;
+boolean draw_function = false;
+boolean draw_axis = false;
+boolean draw_nulls = false;
+boolean draw_display = false;
+boolean random_orbit = true;
+
 int[] rotating = new int[3];
 int[] rotation = new int[3];
 int rotation_increment = 2;
@@ -35,24 +42,30 @@ void draw(){
       0, 0,-1,  //look vector
       0, 1, 0   //up vector
   );
-  hud();
 
   background(0);
   stroke(0xff000000);
   fill(0x993366aa);
+
+  if (draw_display) display();
+
   update_transform();
 
   tick += 0.1;
-  //manual rotation
-  rotateY(radians( rotation[0] ));
-  rotateX(radians( rotation[1] ));
-  rotateZ(radians( rotation[2] ));
   //automatic rotation
-  //rotateY(radians( tick ));
-  //rotateX(radians( tick ));
-  //rotateZ(radians( tick ));
+  if (random_orbit) {
+    rotateY(radians( tick ));
+    rotateX(radians( tick ));
+    rotateZ(radians( tick ));
+  } else {
+    //manual rotation
+    rotateY(radians( rotation[0] ));
+    rotateX(radians( rotation[1] ));
+    rotateZ(radians( rotation[2] ));
+  }
 
-  axis();
+  if (draw_axis) axis();
+  if (draw_function) tunnel.function();
 
   //if (! stopped)
     tunnel.step( 55 );
@@ -62,12 +75,10 @@ void draw(){
   if (count > max_count)
     max_count = count;
 
-  if (! stopped && max_count > 0)
-    if (!tunnel.emit((float)count / 30))
-      println("Emit failed");
-}
-
-void hud(){
+  if (count > 0 || draw_nulls)
+    if (! stopped && max_count > 0)
+      if (!tunnel.emit((float)count / 30))
+        println("Emit failed");
 }
 
 void axis(){
@@ -81,15 +92,21 @@ void axis(){
   popMatrix();
 }
 
-void update_transform(){
-    rotation[0] += rotating[0] * rotation_increment;
-    rotation[1] += rotating[1] * rotation_increment;
-    rotation[2] += rotating[2] * rotation_increment;
-    camera_position[0] += moving[0] * movement_increment;
-    camera_position[1] += moving[1] * movement_increment;
-    camera_position[2] += moving[2] * movement_increment;
+void display(){
+  pushMatrix();
+  stroke(color(255,240,0));
+  line(-100,0,0, 100,0,0);
+  popMatrix();
 }
 
+void update_transform(){
+  rotation[0] += rotating[0] * rotation_increment;
+  rotation[1] += rotating[1] * rotation_increment;
+  rotation[2] += rotating[2] * rotation_increment;
+  camera_position[0] += moving[0] * movement_increment;
+  camera_position[1] += moving[1] * movement_increment;
+  camera_position[2] += moving[2] * movement_increment;
+}
 
 void keyPressed(){
   switch (key){
@@ -99,6 +116,12 @@ void keyPressed(){
   case ' ':
     stopped =! stopped;
     break;
+
+  case '2': draw_display = ! draw_display; break;
+  case '3': random_orbit = ! random_orbit; break;
+  case '5': draw_function = ! draw_function; break;
+  case '4': draw_axis = ! draw_axis; break;
+  case '6': draw_nulls = ! draw_nulls; break;
 
   //rotate
   //X
